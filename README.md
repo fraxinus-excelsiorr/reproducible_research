@@ -32,8 +32,8 @@ ragg
 svglite
 
 ```
+#code to install required packages
 install.packages(c("ggplot2", "palmerpenguins", "janitor", "dplyr", "ragg", "svglite"))
-
 ```
 
 
