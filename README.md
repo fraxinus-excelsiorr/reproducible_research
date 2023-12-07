@@ -1,5 +1,5 @@
 # Reproducible Research Assignment
-Candidate number 1062369 
+**Candidate number: 1062369**
 
 
 ### Penguins Project
