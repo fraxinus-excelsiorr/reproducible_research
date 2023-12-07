@@ -20,10 +20,15 @@ All files and folders needed can be found within the "PenguinProject" folder of 
 ### Packages required
 
 ggplot2
+
 palmerpenguins
+
 janitor
+
 dplyr
+
 ragg
+
 svglite
 
 ```
