@@ -32,7 +32,7 @@ ragg
 svglite
 
 ```
-# install.packages(c("ggplot2", "palmerpenguins", "janitor", "dplyr", "ragg", "svglite"))
+install.packages(c("ggplot2", "palmerpenguins", "janitor", "dplyr", "ragg", "svglite"))
 
 ```
 
