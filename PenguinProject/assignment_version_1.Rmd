@@ -1,0 +1,533 @@
+---
+title: "Reproducible Figures Assignment"
+output:
+  html_document: default
+  pdf_document: default
+date: "2023-10-09"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+*The following is a template .rmd RMarkdown file for you to use for your homework submission.*
+
+*Please Knit your .rmd to a PDF format or HTML and submit that with no identifiers like your name.*
+
+*To create a PDF, first install tinytex and load the package. Then press the Knit arrow and select "Knit to PDF".*
+
+## QUESTION 01: Data Visualisation for Science Communication
+
+*Create a figure using the Palmer Penguin dataset that is correct but badly communicates the data. **Do not make a boxplot**.*
+
+*Use the following references to guide you:*
+
+-   [*https://www.nature.com/articles/533452a*](https://www.nature.com/articles/533452a){.uri}
+-   [*https://elifesciences.org/articles/16800*](https://elifesciences.org/articles/16800){.uri}
+
+*Note: Focus on visual elements rather than writing misleading text on it.*
+
+### a) Provide your figure here:
+
+```{r, echo=FALSE}
+# install.packages(c("ggplot2", "palmerpenguins", "janitor", "dplyr", "plotly", "ragg", "svglite"))
+
+library(ggplot2)
+library(palmerpenguins)
+library(janitor)
+library(dplyr)
+library(plotly)
+library(ragg)
+library(svglite)
+```
+
+
+```{r bad figure code, echo=FALSE}
+ggplot(penguins, aes(x=flipper_length_mm, y=bill_length_mm, colour=species)) +
+  geom_point(size=15,shape="star") + 
+  scale_color_brewer(palette = "Greys") +
+  labs(x='Flipper length (mm)', y='Bill length (mm)', colour="Species") +
+  theme_minimal() 
+
+```
+
+
+
+### b) Write about how your design choices mislead the reader about the underlying data (200-300 words).
+
+*Include references.*
+
+My plot is aiming to illustrate the relationship between flipper length (x) and bill length (y), for three different penguin species, in the form of a scatterplot. It fails to do so for a variety of reasons. 
+
+First, each datapoint is too large and have a star shape, which makes it impossible to differentiate each point from each other. They are also not completely contained within the figure, making it impossible to see some outlier datapoints. The datapoints also overlap significantly, which and obscures the overall trend in the relationship between X and Y.
+
+Additionally, the colours chosen to represent each species are different shades of grey. In the plot and the figure legend, each colour is not easily differentiated, undermining how easily the figure can be read. Additionally, the shade of grey representing "Adelie" species data looks very similar to the background colour, so this section of datapoints is practically invisible.
+
+------------------------------------------------------------------------
+
+## QUESTION 2: Data Pipeline
+
+*Write a data analysis pipeline in your .rmd RMarkdown file. You should be aiming to write a clear explanation of the steps, the figures visible, as well as clear code.*
+
+*Your code should include the steps practiced in the lab session:*
+
+-   *Load the data*
+
+-   *Appropriately clean the data*
+
+-   *Create an Exploratory Figure (**not a boxplot**)*
+
+-   *Save the figure*
+
+-   ***New**: Run a statistical test*
+
+-   ***New**: Create a Results Figure*
+
+-   *Save the figure*
+
+*An exploratory figure shows raw data, such as the distribution of the data. A results figure demonstrates the stats method chosen, and includes the results of the stats test.*
+
+*Between your code, communicate clearly what you are doing and why.*
+
+*Your text should include:*
+
+-   *Introduction*
+
+-   *Hypothesis*
+
+-   *Stats Method*
+
+-   *Results*
+
+-   *Discussion*
+
+-   *Conclusion*
+
+*You will be marked on the following:*
+
+### a) Your code for readability and functionality
+
+### b) Your figures for communication
+
+### c) Your text communication of your analysis
+
+*Below is a template you can use.*
+
+------------------------------------------------------------------------
+
+### Introduction
+
+The morphology of bird bills can reveal fascinating insight into birds' ecological niches and evolutionary past. Bill morphology can be used to make predictions about bird species' feeding habits, foraging strategies, preferred prey, and more (Tobias et al., 2022).
+
+Given the ecological significance of bill morphology, learning about how different morphological characteristics have interacted over evolutionary history can also be critical for learning about how birds have adapted to environmental change, and how they may continue to adapt in the future to a changing world (Xu et al., 2023).
+
+In this data pipeline, I will explore the relationship between bill shape characteristics in the Palmer penguins dataset- specifically bill depth and length across different species- and the possible evolutionary or ecological implications of my results. 
+
+Installing and loading packages:
+```{r}
+#installing packages
+install.packages(c("ggplot2", "palmerpenguins", "janitor", "dplyr"))
+```
+
+```{r}
+#loading packages
+library(ggplot2)
+library(palmerpenguins)
+library(janitor)
+library(dplyr)
+```
+
+Loading in the raw data and looking at it:
+```{r}
+#make sure working directory is set to the PenguinsProject file
+#writing the contents of the raw dataset to a csv file in the data directory
+write.csv(penguins_raw, "data/penguins_raw.csv")
+
+#loading the data from the saved version 
+penguins_raw <- read.csv("data/penguins_raw.csv")
+
+#looking at raw data
+head(penguins_raw)
+```
+
+```{r}
+#looking at column names
+names(penguins_raw)
+```
+
+Calling cleaning functions on the raw penguins dataset:
+```{r}
+#making functions from cleaning.r accessible to this markdown file
+source("functions/cleaning.r")
+
+#calling various cleaning functions:
+penguins_clean <- penguins_raw %>%
+  #cleaning column names
+    clean_column_names() %>%
+  #shortening species names in the species column
+    shorten_species() %>%
+  #removing any empty columns or rows
+    remove_empty_columns_rows() %>%
+  #NEW FUNCTION: changing the word "culmen" to "bill" in the columns 
+    culmen_to_bill()
+
+```
+
+Checking the new column names after calling cleaning functions:
+```{r}
+#checking column names
+names(penguins_clean)
+```
+
+#### Creating exploratory figures for each species:
+
+Calling a function to filter the cleaned penguins dataset to only include Adelie penguins:
+
+```{r}
+#making functions from cleaning.r accessible to this markdown file
+source("functions/cleaning.r")
+
+# calling the function which filters the data by adelie 
+adelie <- penguins_clean %>% filter_by_adelie()
+```
+
+Exploratory figure of the Adelie data:
+
+```{r}
+#making the source of the functions available
+source("functions/plotting.r")
+
+#calling the plotting function 
+adelie_scatterplot <- plot_figure_one(adelie)
+adelie_scatterplot
+```
+Figure 1
+
+Saving this figure as a png and svg:
+```{r}
+#making the source of the functions available
+source("functions/plotting.r")
+
+# saving the figure as a png and svg
+save_fig1_png(penguins_clean, 
+                      "figures/fig01_report.png", 
+                      size = 15, res = 600, scaling=1)
+save_fig1_svg(penguins_clean, 
+                      "figures/fig01_vector.svg", 
+                      size = 15, scaling = 1)
+
+```
+
+
+
+Calling a function to filter the cleaned penguins dataset to only include Chinstrap penguins:
+
+```{r}
+#making functions from cleaning.r accessible to this markdown file
+source("functions/cleaning.r")
+
+# calling the function which filters the data by chinstrap 
+chinstrap <- penguins_clean %>% filter_by_chinstrap()
+
+```
+
+Exploratory figure of the Chinstrap data:
+
+```{r}
+#making the source of the functions available
+source("functions/plotting.r")
+
+#calling the plotting function 
+chinstrap_scatterplot <- plot_figure_two(chinstrap)
+chinstrap_scatterplot
+
+```
+Figure 2
+
+Saving this figure as a png and svg:
+```{r}
+#making the source of the functions available
+source("functions/plotting.r")
+
+# saving the figure as a png and svg
+save_fig2_png(penguins_clean, 
+                      "figures/fig02_report.png", 
+                      size = 15, res = 600, scaling=1)
+save_fig2_svg(penguins_clean, 
+                      "figures/fig02_vector.svg", 
+                      size = 15, scaling = 1)
+
+```
+
+
+Calling a function to filter the cleaned penguins dataset to only include Gentoo penguins:
+
+```{r}
+#making functions from cleaning.r accessible to this markdown file
+source("functions/cleaning.r")
+
+# calling the function which filters the data by gentoo 
+gentoo <- penguins_clean %>% filter_by_gentoo()
+
+```
+
+Exploratory figure of the Gentoo data:
+
+```{r}
+#making the source of the functions available
+source("functions/plotting.r")
+
+#calling the plotting function 
+gentoo_scatterplot <- plot_figure_three(gentoo)
+gentoo_scatterplot
+```
+Figure 3
+
+Saving this figure as a png and svg:
+```{r}
+#making the source of the functions available
+source("functions/plotting.r")
+
+# saving the figure as a png and svg
+save_fig3_png(penguins_clean, 
+                      "figures/fig03_report.png", 
+                      size = 15, res = 600, scaling=1)
+save_fig3_svg(penguins_clean, 
+                      "figures/fig03_vector.svg", 
+                      size = 15, scaling = 1)
+
+```
+
+
+### Hypothesis
+
+#### Is there at least one penguin species whose bill length is significantly linearly associated with bill depth?
+
+\(H_0\): the slope of the regression line between bill length and depth, for every species, is not significantly different from 0:
+
+\( \beta_1 \) = \( \beta_2 \) = \( \beta_3 \) = 0
+
+\(H_A\): the slope of the regression line between bill length and depth, for at least 1 species, is significantly different from 0:
+
+At least 1 \( \beta_i \) &ne; 0 
+
+
+
+### Statistical Methods
+
+Creating a linear model for the penguin dataset (with bill depth as a response variable, and species and bill length as explanatory variables), then looking at its summary table and ANOVA table:
+```{r Statistics}
+
+#creating a linear model
+penguin_lm <- lm(bill_depth_mm ~ species*bill_length_mm, penguins_clean)
+
+#summary of linear model
+summary(penguin_lm)
+```
+
+```{r}
+#summary of anova table for this linear model
+anova(penguin_lm)
+
+```
+
+
+We can see from second line in the ANOVA table that, for at least one species, there is a significant linear relationship between bill length and bill depth (P<0.05). 
+
+**This means that we can reject our null hypothesis that the slope of the regression line between bill length and depth, for every species, is not significantly different from 0.** We will undergo more statistical testing to see exactly which of the penguin species have linear regression slopes that are not equal to 0.  
+
+[Unrelated to the hypotheses, this ANOVA table also tells us that there is a significant difference in bill depth between species (P<0.05), and that the relationship between depth and length does not differ significantly between species- i.e., that they have no significant interaction (P>0.05).]
+
+### Further analysis and results
+
+To find out *which* species have a significant association between bill length and depth, we can look at linear regression models for each species:
+
+##### *Adelie*
+
+Creating a linear regression model for the species Adelie:
+```{r}
+#creating a linear regression model for adelie
+adelie_mod1 <- lm(bill_length_mm ~ bill_depth_mm, adelie)
+```
+
+Checking its summary statistics and ANOVA table:
+```{r}
+#looking at summary of linear regression model
+summary(adelie_mod1)
+```
+
+```{r}
+#anova table for adelie linear regression model
+anova(adelie_mod1)
+```
+
+The summary table shows that the slope for the Adelie regression line = 0.857.
+
+The ANOVA table shows that the P value for the regression line is less than 0.05. 
+
+This means that, for Adelie penguins, we can be confident that the slope is significantly different from 0. Therefore, Adelie penguins have a significant positive, linear relationship between bill depth and length. 
+
+
+##### *Chinstrap*
+
+Creating a linear regression model for the species Chinstrap:
+```{r}
+#creating a linear regression model for chinstrap
+chinstrap_mod1 <- lm(bill_length_mm ~ bill_depth_mm, chinstrap)
+```
+
+Checking its summary statistics and ANOVA table:
+```{r}
+#looking at summary of linear regression model
+summary(chinstrap_mod1)
+```
+
+```{r}
+#anova table for chinstrap linear regression model
+anova(chinstrap_mod1)
+```
+
+The summary table shows that the slope for the Chinstrap regression line = 1.922.
+
+The ANOVA table shows that the P value for the regression line is less than 0.05. 
+
+This means that, for Chinstrap penguins, we can be confident that the slope is significantly different from 0. Therefore, Chinstrap penguins have a significant positive, linear relationship between bill depth and length. 
+
+
+
+##### *Gentoo*
+
+Creating a linear regression model for the species Gentoo:
+```{r}
+#creating a linear regression model for gentoo
+gentoo_mod1 <- lm(bill_length_mm ~ bill_depth_mm, gentoo)
+```
+
+Checking its summary statistics and ANOVA table:
+```{r}
+#looking at summary of linear regression model
+summary(gentoo_mod1)
+```
+
+```{r}
+#anova table for gentoo linear regression model
+anova(gentoo_mod1)
+```
+
+The summary table shows that the slope for the Gentoo regression line = 2.0208.
+
+The ANOVA table shows that the P value for the regression line is less than 0.05. 
+
+This means that, for Gentoo penguins, we can be confident that the slope is significantly different from 0. Therefore, Gentoo penguins have a significant positive, linear relationship between bill depth and length. 
+
+
+
+### Overall results
+
+We can reject the null hypothesis, and accept the alternative hypothesis that at least one species' regression line between bill length and depth is significantly different than 0. 
+
+By conducting further analysis, it becomes evident that *all* penguin species demonstrated linear regression lines that were significantly different from 0, and thus had statistically significant linear relationships between bill length and depth. 
+
+The figure below shows these three significant relationships between bill length and depth for different penguin species, and their linear regression lines. 
+
+```{r Plotting Results}
+#making functions from plotting.r accessible to this markdown file
+source("functions/plotting.r")
+
+#calling the plotting function 
+bill_scatterplot <- plot_bill_figure(penguins_clean)
+bill_scatterplot
+
+```
+Figure 4
+
+Saving this figure as a png and svg:
+```{r}
+#making the source of the functions available
+source("functions/plotting.r")
+
+# saving the figure as a png and svg
+save_bill_figure_png(penguins_clean, 
+                      "figures/fig04_report.png", 
+                      size = 15, res = 600, scaling=1)
+save_bill_figure_svg(penguins_clean, 
+                      "figures/fig04_vector.svg", 
+                      size = 15, scaling = 1)
+
+```
+
+
+
+
+### Discussion
+
+We have established that, for each species, as bill length increases, so does bill depth, due to their significant positive linear relationship. This means that we can use bill length to predict bill depth within each penguin species.
+
+This has many evolutionary implications for penguins, especially given that this pattern appears to arise within each species independently. Slopes and intercepts appear different among the different species, and this morphological divergence could have occurred as a result of the species' ecological niche differentiation - by having different foraging/feeding behaviour, different preferred prey, etc (Trivelpiece et al., 1987). Despite this, the same positive linear relationship between bill length and depth is still observed. 
+
+One possible explanation for this could be that these morphological traits are *evolutionarily integrated*. The evolution of bill length could be constrained by bill depth, and visa versa, and therefore these traits are expected to show a pattern of covariation over generations or between species (Evans et al., 2023). This could be due to a *genetic correlation* between the two traits, e.g., due to linkage disequilibrium, where genetic variation in one trait leads to genetic variation in the other trait (Felsenstein, 2002). 
+
+Another possible evolutionary explanation for the association between bill depth and length across penguin species could be a *shared selective pressure*. In other words, if the covariation of bill depth and length conferred an adaptive advantage to penguins, this could result in a correlation between the two traits over evolutionary time even if they are completely genetically independent (Zeng, 1988). 
+
+#### Limitations
+
+My analysis suffers from limitations. Critically, not all of the assumptions of linear modelling were met. I decided to proceed with parametric testing despite this, due to its higher precision and power. However, for each species dataset, variance was not always equal across Y values, and residuals were not always normally distributed. Additionally, I do not know whether the Palmer penguins dataset constitutes a sufficiently random and independent sample. This means that the validity and robustness of my statistical findings are limited. 
+
+Additionally, my results are not broadly applicable to all penguin species: only the three that I analysed. The Antarctic distributions of Adelie, Chinstrap, and Gentoo penguins all overlap considerably, which highlights a need for caution when extrapolating these results to any other bird or penguin taxon. Therefore, the scope of the applicability of these results is very narrow.
+
+### Conclusion
+
+Despite the limitations of my data analysis, the observed positive linear relationships between bill length and depth in Adelie, Chinstrap, and Gentoo penguins could be important for research or conservation efforts. In general, the analysis of morphological differences among penguin species and their ecological implications is essential for understanding past evolutionary trajectories, and predicting future evolutionary trajectories under a changing climate. 
+
+With this in mind, it is important that we investigate whether the pattern observed in this analysis is consistent across other penguin populations and species, and whether it is spatially and temporally consistent. Additionally, an important area for future research would be to develop our understanding of the extent to which bird bill morphological traits are modular or integrated, and whether there is a genetic basis for their covariation in Adelie, Chinstrap, and Gentoo penguins. 
+
+Overall, in this analysis, I have statistically demonstrated that there is a significant positive linear relationship between bill depth and length in Adelie, Chinstrap, and Gentoo penguins, therefore rejecting the null hypothesis that each species has a linear regression slope equal to 0. This finding could have important evolutionary and ecological significance for these penguins, but further investigation is needed to fully elucidate the nature and implications of relationships between penguin bill traits. 
+
+
+### Bibliography
+
+Evans, K.M. et al. (2023) ‘Untangling the relationship between developmental and evolutionary integration’, Seminars in Cell &amp;amp; Developmental Biology, 145, pp. 22–27. doi:10.1016/j.semcdb.2022.05.026. 
+
+Felsenstein, J. (2002) ‘Quantitative characters, phylogenies, and morphometrics’, Systematics Association Special Volumes, pp. 27–44. doi:10.1201/9780203165171.ch3. 
+
+Tobias, J.A. et al. (2022) ‘Avonet: Morphological, ecological and geographical data for all birds’, Ecology Letters, 25(3), pp. 581–597. doi:10.1111/ele.13898. 
+
+Trivelpiece, W.Z., Trivelpiece, S.G. and Volkman, N.J. (1987) ‘Ecological segregation of Adelie, Gentoo, and chinstrap penguins at king george island, Antarctica’, Ecology, 68(2), pp. 351–361. doi:10.2307/1939266. 
+
+Xu, Y. et al. (2023) ‘Ecological predictors of interspecific variation in Bird Bill and leg lengths on a global scale’, Proceedings of the Royal Society B: Biological Sciences, 290(2003). doi:10.1098/rspb.2023.1387. 
+
+Zeng, Z.-B. (1988) ‘Long-term correlated response, interpopulation covariation, and interspecific allometry’, Evolution, 42(2), p. 363. doi:10.2307/2409239. 
+
+------------------------------------------------------------------------
+
+## QUESTION 3: Open Science
+
+### a) GitHub
+
+*Upload your RProject you created for **Question 2** and any files and subfolders used to GitHub. Do not include any identifiers such as your name. Make sure your GitHub repo is public.*
+
+*GitHub link:*
+
+*You will be marked on your repo organisation and readability.*
+
+### b) Share your repo with a partner, download, and try to run their data pipeline.
+
+*Partner's GitHub link:*
+
+*You **must** provide this so I can verify there is no plagiarism between you and your partner.*
+
+### c) Reflect on your experience running their code. (300-500 words)
+
+-   *What elements of your partner's code helped you to understand their data pipeline?*
+
+-   *Did it run? Did you need to fix anything?*
+
+-   *What suggestions would you make for improving their code to make it more understandable or reproducible, and why?*
+
+-   *If you needed to alter your partner's figure using their code, do you think that would be easy or difficult, and why?*
+
+### d) Reflect on your own code based on your experience with your partner's code and their review of yours. (300-500 words)
+
+-   *What improvements did they suggest, and do you agree?*
+
+-   *What did you learn about writing code for other people?*
