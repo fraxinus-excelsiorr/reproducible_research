@@ -17,7 +17,7 @@ All files and folders needed can be found within the "PenguinProject" folder of 
 7. Conclusion
 8. Bibliography
 
-### Packages Required
+### R Packages Required
 
 ggplot2
 
