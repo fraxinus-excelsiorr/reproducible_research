@@ -16,3 +16,19 @@ All files and folders needed can be found within the "PenguinProject" folder of 
 6. Discussion
 7. Conclusion
 8. Bibliography
+
+### Packages required
+
+ggplot2
+palmerpenguins
+janitor
+dplyr
+ragg
+svglite
+
+```
+# install.packages(c("ggplot2", "palmerpenguins", "janitor", "dplyr", "ragg", "svglite"))
+
+```
+
+
