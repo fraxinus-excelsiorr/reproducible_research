@@ -1,4 +1,4 @@
-# reproducible_research
+# Reproducible Research Assignment
 
 Dear reader,
 
