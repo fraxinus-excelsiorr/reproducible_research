@@ -2,18 +2,6 @@
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
-```{r, echo=FALSE}
-# install.packages(c("ggplot2", "palmerpenguins", "janitor", "dplyr", "plotly", "ragg", "svglite"))
-
-library(ggplot2)
-library(palmerpenguins)
-library(janitor)
-library(dplyr)
-library(plotly)
-library(ragg)
-library(svglite)
-```
-
 ### Introduction
 
 The morphology of bird bills can reveal fascinating insight into birds' ecological niches and evolutionary past. Bill morphology can be used to make predictions about bird species' feeding habits, foraging strategies, preferred prey, and more (Tobias et al., 2022).
@@ -25,7 +13,7 @@ In this data pipeline, I will explore the relationship between bill shape charac
 Installing and loading packages:
 ```{r}
 #installing packages
-install.packages(c("ggplot2", "palmerpenguins", "janitor", "dplyr"))
+# install.packages(c("ggplot2", "palmerpenguins", "janitor", "dplyr", "plotly", "ragg", "svglite"))
 ```
 
 ```{r}
@@ -34,6 +22,9 @@ library(ggplot2)
 library(palmerpenguins)
 library(janitor)
 library(dplyr)
+library(plotly)
+library(ragg)
+library(svglite)
 ```
 
 Loading in the raw data and looking at it:
