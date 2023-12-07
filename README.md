@@ -2,7 +2,7 @@
 
 Dear reader,
 
-Please find my assignment markdown file, pdf, and all accompanying files in the "PenguinProject" folder, in the main branch of this repository.
+Please find my assignment markdown file/HTML (and all accompanying files) in the "PenguinProject" folder, in the main branch of this repository.
 
 Yours forever, 
 
