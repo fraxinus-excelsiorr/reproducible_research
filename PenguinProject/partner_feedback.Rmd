@@ -1,0 +1,53 @@
+---
+title: "partner_feedback"
+output: html_document
+date: "2023-12-07"
+---
+
+## QUESTION 3: Open Science
+
+### a) GitHub
+
+*Upload your RProject you created for **Question 2** and any files and subfolders used to GitHub. Do not include any identifiers such as your name. Make sure your GitHub repo is public.*
+
+https://github.com/fraxinus-excelsiorr/reproducible_research/
+
+*You will be marked on your repo organisation and readability.*
+
+### b) Share your repo with a partner, download, and try to run their data pipeline.
+
+https://github.com/lanonmymoush/reproducible_figures 
+
+*You **must** provide this so I can verify there is no plagiarism between you and your partner.*
+
+### c) Reflect on your experience running their code. (300-500 words)
+
+-   *What elements of your partner's code helped you to understand their data pipeline?*
+
+My partner was very clear about the aims of their analysis in their introduction, setting  up the scope of their investigation and how it would be carried out. They wrote clear explanations for each stage of the code, justifying why each was important and what exactly the code was doing. They also carried out the data pipeline in a logical, well-executed way.
+
+I liked the visualisation of the data in the form of a violin plot. This provided much more detailed information about how the datapoints were distributed for each sex, which was important for their statistical analysis: rather than just showing the mean, like a bar graph would have.
+
+-   *Did it run? Did you need to fix anything?*
+
+Only one line of code showed an error message (line 116). 
+
+*Adelie <- rename(Adelie, "body_mass_g" = `Body Mass (g)`)*
+
+This error was due to a discrepency in the penguins_raw dataset column names between myself and my partner (`Body Mass (g)` vs `Body.Mass..g.`). The reason for this difference was that I had loaded the data from a saved csv version, causing the spaces in my column names to be changed into full stops: whereas my partner loaded the dataset directly from the palmerpenguins() package, so theirs remained unaltered. It was easily fixed.
+
+-   *What suggestions would you make for improving their code to make it more understandable or reproducible, and why?*
+
+First, I would suggest adding an explanation for the linear model's summary table and ANOVA table, so that readers who are uninitiated in statistics can understand what the output means. 
+
+Secondly, my partner has the raw code for dataset cleaning, subsetting, and plotting included in their markdown file. I would suggest turning these into functions, and adding a subfolder containing R files with these data functions to their penguins project file. This way, you could also pipe several functions at once to clean your data in the markdown file, which simplifies its code. 
+
+My partner could also set up functions which save the figures to another subfolder. Figures could be saved in different formats, but ideally a vector format so they don't depreciate in quality as they are zoomed in. This way, the scale and dimensions of the figures can be altered as they are saved, which is better for reproducibility than altering the sizes of text directly in the plotting code.
+
+Having these functions accessible on separate (but easily accessed) R files would form a more reproducible data pipeline. The code would be simpler and the reader can look in the functions subfolder if they are interested in seeing the function's code and what it's doing.
+
+-   *If you needed to alter your partner's figure using their code, do you think that would be easy or difficult, and why?*
+
+My partner's main results figure was very well explained in their accompanying text, which makes it easier to follow their code, and thus makes the code easier to alter. They could improve this even more by annotating their plotting code directly, line by line. 
+
+The figure could also be altered more efficiently if the markdown file only included a call to a plotting function, and the function to plot the figure was contained in a functions subfolder. This way, the figure can be edited without making changes directly to the markdown file, and annotations explaining the code can be even more extensive and detailed without coming at the cost of the markdown file's simplicity. This would make it very easy for me to alter the figure.
