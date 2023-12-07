@@ -6,11 +6,17 @@
 
 This repository is for my Penguin Project (for question 2 of Reproducible Research assignment). In this project, I aim to investigate whether or not there is a relationship between bill length and depth for Adelie, Chinstrap, and Gentoo penguin species, using the Palmer Penguins dataset. 
 
-All files and folders needed can be found within the "PenguinProject" folder of this repository. The final, main investigation takes place in the markdown/pdf file "PENGUINS_FINAL". In order to reproduce my analysis, you should download this R markdown file, in addition to the "functions", "data", and "figures" subfolders. 
+## How to reproduce this project 
 
-Note: when my partner ran my code, they accessed the previous version of the markdown file, which is saved in the penguins folder as "assignment_version_1". 
+1. Download PENGUINS_FINAL.Rmd from the penguins folder in this repository to a new folder in your PC (not saved to desktop). 
+2. Download the "functions", "figures", and "data" subfolders from the penguins folder in this repository (including their contents), and save them to the folder you just made.
+3. Open R and set your working directory to the folder you just made.
+4. Ensure that the required R packages are downloaded.
+5. Open PENGUINS_FINAL.Rmd in R and run the code.
 
-### Table of Contents for Markdown File
+Note: when my partner ran my code, they accessed the first version of the markdown file rather than the final version. This is also saved in the penguins folder as "assignment_version_1". 
+
+### Table of Contents 
 
 1. Introduction
 2. Hypotheses
