@@ -6,7 +6,7 @@
 
 This repository is for my Penguin Project (for question 2 of Reproducible Research assignment). In this project, I aim to investigate whether or not there is a relationship between bill length and depth for Adelie, Chinstrap, and Gentoo penguin species, using the Palmer Penguins dataset. 
 
-## How to reproduce this project 
+### How to reproduce this project 
 
 1. Download PENGUINS_FINAL.Rmd from the penguins folder in this repository to a new folder in your PC (not saved to desktop). 
 2. Download the "functions", "figures", and "data" subfolders from the penguins folder in this repository (including their contents), and save them to the folder you just made.
